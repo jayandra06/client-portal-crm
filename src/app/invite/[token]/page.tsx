@@ -139,20 +139,12 @@ export default async function InvitePage({
 
       <div className="mt-6">
         {!authUser && (
-          <div className="flex gap-3">
-            <Link
-              href={`/login?redirectTo=${encodeURIComponent(redirectTarget)}`}
-              className="flex-1 rounded-md bg-black px-4 py-2 text-center text-sm font-medium text-white transition-colors hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
-            >
-              Log in
-            </Link>
-            <Link
-              href={`/signup?invitationToken=${encodeURIComponent(token)}&redirectTo=${encodeURIComponent(redirectTarget)}`}
-              className="flex-1 rounded-md border border-gray-300 px-4 py-2 text-center text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
-            >
-              Sign up
-            </Link>
-          </div>
+          <Link
+            href={`/login?redirectTo=${encodeURIComponent(redirectTarget)}`}
+            className="block w-full rounded-md bg-black px-4 py-2 text-center text-sm font-medium text-white transition-colors hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+          >
+            Log in to accept invitation
+          </Link>
         )}
 
         {authUser && !emailMatches && (

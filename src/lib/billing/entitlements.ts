@@ -99,33 +99,24 @@ export function buildOrganizationEntitlements({
   usage: OrganizationUsage & { pendingInvitations: number };
   now: Date;
 }): OrganizationEntitlements {
-  const planKey: PlanKey =
-    subscription && isPlanKey(subscription.planKey) ? subscription.planKey : LEGACY_PLAN_KEY;
+  // Internal Agency Mode — All organizations have Unlimited Lifetime Access
+  const planKey: PlanKey = LEGACY_PLAN_KEY;
   const plan = getPlan(planKey);
-  const isLegacyPlan = planKey === LEGACY_PLAN_KEY;
 
-  const accessMode: AccessMode = subscription
-    ? computeAccessMode(subscription, now)
-    : LEGACY_ACCESS_MODE;
-
-  const canCreateNewResources = accessMode === "FULL_ACCESS";
+  const accessMode: AccessMode = LEGACY_ACCESS_MODE;
+  const canCreateNewResources = true;
 
   const membersForLimitCheck = usage.members + usage.pendingInvitations;
   const underMemberLimit = membersForLimitCheck < plan.limits.maxMembers;
-  const underClientLimit = plan.limits.maxClients === null || usage.clients < plan.limits.maxClients;
-  const underProjectLimit = plan.limits.maxProjects === null || usage.projects < plan.limits.maxProjects;
+  const underClientLimit = true;
+  const underProjectLimit = true;
   const underStorageLimit = usage.storageBytes < plan.limits.maxStorageBytes;
 
   const blockedReasons: EntitlementReasonCode[] = [];
-  if (!canCreateNewResources) blockedReasons.push("READ_ONLY_ACCESS");
-  if (!underMemberLimit) blockedReasons.push("MEMBER_LIMIT_REACHED");
-  if (!underClientLimit) blockedReasons.push("CLIENT_LIMIT_REACHED");
-  if (!underProjectLimit) blockedReasons.push("PROJECT_LIMIT_REACHED");
-  if (!underStorageLimit) blockedReasons.push("STORAGE_LIMIT_REACHED");
 
   return {
     planKey,
-    subscriptionStatus: subscription && !isLegacyPlan ? subscription.status : "LEGACY",
+    subscriptionStatus: "LEGACY",
     accessMode,
 
     maxMembers: plan.limits.maxMembers,
@@ -138,14 +129,13 @@ export function buildOrganizationEntitlements({
     currentProjects: usage.projects,
     currentStorageBytes: usage.storageBytes,
 
-    canInviteMember: canCreateNewResources && underMemberLimit,
-    canCreateClient: canCreateNewResources && underClientLimit,
-    canCreateProject: canCreateNewResources && underProjectLimit,
-    canUploadBytes: (size: number) =>
-      canCreateNewResources && usage.storageBytes + Math.max(size, 0) <= plan.limits.maxStorageBytes,
+    canInviteMember: true,
+    canCreateClient: true,
+    canCreateProject: true,
+    canUploadBytes: () => true,
 
-    trialEndsAt: subscription ? subscription.trialEndsAt : null,
-    gracePeriodEndsAt: subscription?.gracePeriodEndsAt ?? null,
+    trialEndsAt: null,
+    gracePeriodEndsAt: null,
 
     blockedReasons,
   };

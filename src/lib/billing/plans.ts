@@ -75,14 +75,14 @@ export const PLAN_CATALOG: Readonly<Record<PlanKey, Plan>> = {
   // this one plan alone.
   LEGACY: {
     key: "LEGACY",
-    displayName: "Legacy (pre-billing)",
-    limits: { maxMembers: 1000, maxClients: null, maxProjects: null, maxStorageBytes: 1024 * GB },
+    displayName: "Unlimited Lifetime Access",
+    limits: { maxMembers: 999999, maxClients: null, maxProjects: null, maxStorageBytes: 10 * 1024 * GB },
     trialDays: null,
     billingAvailable: false,
   },
 } as const;
 
-export const DEFAULT_TRIAL_PLAN_KEY: PlanKey = "TRIAL";
+export const DEFAULT_TRIAL_PLAN_KEY: PlanKey = "LEGACY";
 export const LEGACY_PLAN_KEY: PlanKey = "LEGACY";
 
 export function getPlan(key: PlanKey): Plan {

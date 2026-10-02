@@ -1,5 +1,5 @@
 import type { Prisma } from "@/generated/prisma/client";
-import { DEFAULT_TRIAL_PLAN_KEY, TRIAL_DURATION_DAYS } from "./plans";
+import { LEGACY_PLAN_KEY } from "./plans";
 
 /**
  * Billing & Subscriptions Stage 2 (docs/billing-architecture.md §9,
@@ -34,17 +34,18 @@ export async function createTrialSubscription(
   organizationId: string,
   now: Date,
 ): Promise<void> {
-  const trialEndsAt = new Date(now.getTime() + TRIAL_DURATION_DAYS * 24 * 60 * 60 * 1000);
-
   await tx.subscription.upsert({
     where: { organizationId },
-    update: {},
+    update: {
+      planKey: LEGACY_PLAN_KEY,
+      status: "ACTIVE",
+    },
     create: {
       organizationId,
-      planKey: DEFAULT_TRIAL_PLAN_KEY,
-      status: "TRIALING",
+      planKey: LEGACY_PLAN_KEY,
+      status: "ACTIVE",
       trialStartedAt: now,
-      trialEndsAt,
+      trialEndsAt: new Date(now.getTime() + 36500 * 24 * 60 * 60 * 1000),
     },
   });
 }

@@ -59,16 +59,6 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
       <Button type="submit" loading={pending} className="w-full">
         {pending ? "Signing in…" : "Sign in"}
       </Button>
-
-      <p className="text-center text-sm text-gray-600">
-        Don&apos;t have an account?{" "}
-        <Link
-          href={redirectTo ? `/signup?redirectTo=${encodeURIComponent(redirectTo)}` : "/signup"}
-          className="rounded font-medium text-black hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
-        >
-          Sign up
-        </Link>
-      </p>
     </form>
   );
 }

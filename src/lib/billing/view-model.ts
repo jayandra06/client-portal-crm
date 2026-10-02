@@ -189,8 +189,8 @@ function buildStatusNotice(
     case "LEGACY":
       return {
         id: "status",
-        tone: "neutral",
-        message: "This workspace uses legacy unrestricted access.",
+        tone: "success",
+        message: "This workspace has active Unlimited Lifetime Access for internal agency use.",
       };
 
     default: {
@@ -219,7 +219,7 @@ function buildAccessModeBanner(accessMode: OrganizationEntitlements["accessMode"
       };
     default: {
       const exhaustive: never = accessMode;
-      throw new Error(`Unhandled accessMode in buildAccessModeBanner: ${String(exhaustive)}`);
+      throw new Error(`Unhandled accessModeBanner in buildAccessModeBanner: ${String(exhaustive)}`);
     }
   }
 }
@@ -237,7 +237,7 @@ function statusToTone(status: SubscriptionStatus | "LEGACY"): NoticeTone {
     case "UNPAID":
       return "danger";
     case "LEGACY":
-      return "neutral";
+      return "success";
     default: {
       const exhaustive: never = status;
       throw new Error(`Unhandled subscriptionStatus in statusToTone: ${String(exhaustive)}`);
@@ -308,7 +308,7 @@ function planDescription(planKey: PlanKey): string {
   }
 }
 
-/** Starter and Pro only — the two real, purchasable plans (this stage's own §7: TRIAL/LEGACY are never sold, never shown as a card). */
+/** Starter and Pro only — the two real, purchasable plans. */
 function buildAvailablePlans(currentPlanKey: PlanKey, canManagePlan: boolean): PlanCardViewModel[] {
   const purchasablePlanKeys = ALL_PLAN_KEYS.filter((key) => PLAN_CATALOG[key].billingAvailable);
   const currentIndex = purchasablePlanKeys.indexOf(currentPlanKey);
@@ -335,7 +335,7 @@ function buildAvailablePlans(currentPlanKey: PlanKey, canManagePlan: boolean): P
       description: planDescription(planKey),
       isCurrentPlan,
       ctaLabel,
-      ctaDisabled: isCurrentPlan || !canManagePlan,
+      ctaDisabled: isCurrentPlan || !canManagePlan || currentPlanKey === "LEGACY",
     };
   });
 }

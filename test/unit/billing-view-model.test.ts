@@ -204,9 +204,9 @@ describe("LEGACY (no Subscription row)", () => {
       }),
     });
     expect(vm.isLegacy).toBe(true);
-    expect(vm.statusNotice.tone).toBe("neutral");
+    expect(vm.statusNotice.tone).toBe("success");
     expect(vm.accessModeBanner).toBeNull();
-    expect(vm.currentPlanName).toBe("Legacy (pre-billing)");
+    expect(vm.currentPlanName).toBe("Unlimited Lifetime Access");
   });
 });
 

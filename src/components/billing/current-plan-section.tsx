@@ -18,15 +18,17 @@ export function CurrentPlanSection({ data }: { data: BillingPageViewModel }) {
           </div>
         </div>
 
-        {data.permissions.canManageSubscription ? (
-          <ManageSubscriptionButton />
-        ) : (
-          <div className="text-right">
-            <Button type="button" variant="secondary" disabled aria-disabled="true">
-              Manage subscription
-            </Button>
-            <p className="text-text-muted mt-1 text-xs">Only the organization owner can manage billing.</p>
-          </div>
+        {!data.isLegacy && (
+          data.permissions.canManageSubscription ? (
+            <ManageSubscriptionButton />
+          ) : (
+            <div className="text-right">
+              <Button type="button" variant="secondary" disabled aria-disabled="true">
+                Manage subscription
+              </Button>
+              <p className="text-text-muted mt-1 text-xs">Only the organization owner can manage billing.</p>
+            </div>
+          )
         )}
       </div>
 

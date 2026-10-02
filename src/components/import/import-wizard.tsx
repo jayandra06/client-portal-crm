@@ -26,7 +26,12 @@ import { MAX_IMPORT_FILE_SIZE_BYTES, MAX_IMPORT_ROWS } from "@/lib/import/consta
  * row, re-read from there by both preview and execute.
  */
 
-export type ImportFieldOption = { key: string; label: string; required: boolean };
+export type ImportFieldOption = {
+  key: string;
+  label: string;
+  required: boolean;
+  headerAliases: readonly string[];
+};
 
 type Step = "upload" | "mapping" | "preview" | "summary";
 
@@ -117,6 +122,21 @@ export function ImportWizard({
   const [totalRows, setTotalRows] = useState(0);
   const [mapping, setMapping] = useState<Record<number, string>>({});
   const [preview, setPreview] = useState<PreviewImportResult & { ok: true } | null>(null);
+
+  const mappedFields = new Set(Object.values(mapping).filter(Boolean));
+  const requiredFields = fields.filter((field) => field.required);
+  const mappedRequiredCount = requiredFields.filter((field) => mappedFields.has(field.key)).length;
+  const mappedCount = Object.values(mapping).filter(Boolean).length;
+
+  function autoMapColumns() {
+    const nextMapping: Record<number, string> = {};
+    headers.forEach((header, columnIndex) => {
+      const normalized = header.toLowerCase().replace(/[^a-z0-9]/g, "");
+      const match = fields.find((field) => field.headerAliases.includes(normalized));
+      if (match && !Object.values(nextMapping).includes(match.key)) nextMapping[columnIndex] = match.key;
+    });
+    setMapping(nextMapping);
+  }
   const [summary, setSummary] = useState<ExecutionSummary | null>(null);
 
   async function handleUpload(e: React.FormEvent<HTMLFormElement>) {
@@ -230,40 +250,55 @@ export function ImportWizard({
 
       {step === "mapping" && (
         <div className={CARD_CLASSES}>
-          <h2 className="text-text-primary text-lg font-semibold">Map columns</h2>
-          <p className="text-text-secondary mt-1 text-sm">
-            {totalRows.toLocaleString()} rows detected. Match each CSV column to an Aqenra field, or leave it unmapped
-            to ignore it.
-          </p>
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h2 className="text-text-primary text-lg font-semibold">Map your columns</h2>
+              <p className="text-text-secondary mt-1 text-sm">
+                {totalRows.toLocaleString()} rows detected. Connect each source column to a CRM field.
+              </p>
+            </div>
+            <Button type="button" variant="secondary" onClick={autoMapColumns}>Auto-map columns</Button>
+          </div>
 
-          <div className="mt-4 space-y-3">
-            {headers.map((header, columnIndex) => (
-              <div key={columnIndex} className="flex items-center gap-3">
-                <span className="text-text-primary w-1/2 truncate text-sm" title={header || `(column ${columnIndex + 1})`}>
-                  {header || `(column ${columnIndex + 1})`}
-                </span>
-                <select
-                  value={mapping[columnIndex] ?? UNMAPPED_VALUE}
-                  onChange={(e) =>
-                    setMapping((prev) => ({ ...prev, [columnIndex]: e.target.value }))
-                  }
-                  className="border-border-default text-text-primary bg-surface w-1/2 rounded-md border px-3 py-2 text-sm"
-                >
-                  <option value={UNMAPPED_VALUE}>Not imported</option>
-                  {fields.map((field) => (
-                    <option key={field.key} value={field.key}>
-                      {field.label}
-                      {field.required ? " (required)" : ""}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ))}
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="rounded-xl border border-border-default bg-surface-muted px-3 py-3">
+              <p className="text-text-muted text-xs">Source columns</p><p className="text-text-primary mt-1 text-xl font-semibold">{headers.length}</p>
+            </div>
+            <div className="rounded-xl border border-border-default bg-surface-muted px-3 py-3">
+              <p className="text-text-muted text-xs">Mapped</p><p className="text-text-primary mt-1 text-xl font-semibold">{mappedCount}</p>
+            </div>
+            <div className="rounded-xl border border-border-default bg-surface-muted px-3 py-3">
+              <p className="text-text-muted text-xs">Required fields</p><p className="text-text-primary mt-1 text-xl font-semibold">{mappedRequiredCount}/{requiredFields.length}</p>
+            </div>
+          </div>
+
+          <div className="mt-5 overflow-hidden rounded-xl border border-border-default">
+            <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-3 border-b border-border-default bg-surface-muted px-4 py-3 text-xs font-semibold uppercase tracking-wide text-text-muted">
+              <span>Source column</span><span>CRM destination</span>
+            </div>
+            <div className="divide-border-default divide-y">
+              {headers.map((header, columnIndex) => {
+                const selected = mapping[columnIndex] ?? UNMAPPED_VALUE;
+                const selectedField = fields.find((field) => field.key === selected);
+                return (
+                  <div key={columnIndex} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-center gap-3 px-4 py-3">
+                    <div className="min-w-0"><p className="text-text-primary truncate text-sm font-medium" title={header || `(column ${columnIndex + 1})`}>{header || `(column ${columnIndex + 1})`}</p><p className="text-text-muted mt-0.5 text-xs">Column {columnIndex + 1}</p></div>
+                    <div className="flex min-w-0 items-center gap-2">
+                      <select aria-label={`Map ${header || `column ${columnIndex + 1}`}`} value={selected} onChange={(e) => setMapping((prev) => ({ ...prev, [columnIndex]: e.target.value }))} className="border-border-default text-text-primary bg-surface min-w-0 flex-1 rounded-lg border px-3 py-2 text-sm">
+                        <option value={UNMAPPED_VALUE}>Do not import</option>
+                        {fields.map((field) => <option key={field.key} value={field.key}>{field.label}{field.required ? " · required" : " · optional"}</option>)}
+                      </select>
+                      {selectedField?.required && <span className="shrink-0 rounded-full bg-accent-subtle px-2 py-1 text-[10px] font-semibold text-accent">Required</span>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           <div className="mt-6 flex items-center gap-3">
-            <Button type="button" onClick={handleMappingContinue} loading={pending}>
-              Continue
+            <Button type="button" onClick={handleMappingContinue} loading={pending} disabled={mappedRequiredCount < requiredFields.length}>
+              Review import
             </Button>
             <button type="button" onClick={() => setStep("upload")} className="text-text-secondary text-sm hover:underline">
               Back

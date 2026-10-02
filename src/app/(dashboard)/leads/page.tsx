@@ -243,10 +243,25 @@ export default async function LeadsPage({
   const where = await buildLeadWhere(organizationId, listParams);
   const orderBy = buildLeadOrderBy(listParams);
 
-  // Custom Statuses Phase 2B (Section P) — see clients/page.tsx's own
-  // identical comment; List view's own `?stage=` filter (distinct from
-  // Pipeline's `?stageView=`, which stays LeadStage-keyed — Section H/N).
-  const allStageDefinitions = await listCustomStatusDefinitions(organizationId, "LEAD", { includeArchived: true });
+  // Custom Statuses and the first lead page do not depend on each other.
+  // Start both reads together so navigation is bounded by the slower query,
+  // not the sum of both round trips.
+  const [allStageDefinitions, leadPage] = await Promise.all([
+    listCustomStatusDefinitions(organizationId, "LEAD", { includeArchived: true }),
+    prisma.$transaction([
+      prisma.lead.findMany({
+        where,
+        orderBy,
+        skip: getOffset(listParams.page),
+        take: PAGE_SIZE,
+        include: {
+          assignedTo: { select: { id: true, name: true } },
+          statusDefinition: { select: { label: true, color: true } },
+        },
+      }),
+      prisma.lead.count({ where }),
+    ]),
+  ]);
   const activeStageDefinitions = allStageDefinitions.filter((d) => d.archivedAt === null);
   const selectedArchivedStageDefinition = allStageDefinitions.find(
     (d) => d.archivedAt !== null && d.key === listParams.stage,
@@ -259,23 +274,16 @@ export default async function LeadsPage({
       : []),
   ];
 
-  const [leads, total] = await prisma.$transaction([
-    prisma.lead.findMany({
-      where,
-      orderBy,
-      skip: getOffset(listParams.page),
-      take: PAGE_SIZE,
-      include: {
-        assignedTo: { select: { id: true, name: true } },
-        statusDefinition: { select: { label: true, color: true } },
-      },
-    }),
-    prisma.lead.count({ where }),
+  const [leads, total] = leadPage;
+
+  // Tags are independent of the global tag list, so fetch both in parallel
+  // after the lead ids are known.
+  const [allTags, tagsByLeadId] = await Promise.all([
+    listTags(organizationId),
+    getTagsForEntities(organizationId, "LEAD", leads.map((l) => l.id)),
   ]);
 
-  // Tags V2 (Section 4/5) — see clients/page.tsx's own identical comment.
-  const allTags = await listTags(organizationId);
-  const tagsByLeadId = await getTagsForEntities(organizationId, "LEAD", leads.map((l) => l.id));
+  // Tags V2 (Section 4/5) — fetched above alongside the global tag list.
 
   const totalPages = getTotalPages(total);
   const hasActiveParams = Boolean(

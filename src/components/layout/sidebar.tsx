@@ -232,10 +232,10 @@ export function Sidebar({
   return (
     <nav
       aria-label="Primary"
-      className="border-border-default bg-surface-recessed flex shrink-0 gap-1 overflow-x-auto border-b p-3 md:w-60 md:flex-col md:justify-between md:gap-0.5 md:overflow-x-visible md:border-r md:border-b-0 md:p-4 backdrop-blur-md"
+      className="border-border-default bg-surface-recessed flex shrink-0 gap-1 overflow-x-auto border-b p-3 md:w-60 md:h-screen md:sticky md:top-0 md:flex-col md:justify-between md:gap-0.5 md:overflow-x-visible md:border-r md:border-b-0 md:p-4 backdrop-blur-md"
     >
-      <div className="flex flex-col gap-1 w-full">
-        <div className="hidden items-center justify-between px-2 pb-5 pt-1 md:flex border-b border-border-default mb-2">
+      <div className="flex flex-col gap-1 w-full md:overflow-y-auto md:max-h-[calc(100vh-90px)]">
+        <div className="hidden items-center justify-between px-2 pb-5 pt-1 md:flex border-b border-border-default mb-2 shrink-0">
           <div className="flex items-center gap-2.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -307,7 +307,7 @@ export function Sidebar({
         })}
       </div>
 
-      <div className="hidden md:block pt-6 mt-6 border-t border-border-default text-center">
+      <div className="hidden md:block pt-4 mt-auto border-t border-border-default text-center shrink-0">
         <p className="text-[11px] font-medium text-text-muted">
           Powered by{" "}
           <a

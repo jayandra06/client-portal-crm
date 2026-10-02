@@ -5,6 +5,8 @@ import { GlobalSearch } from "@/components/search/global-search";
 import { AiAssistantTrigger } from "@/components/ai/ai-assistant-trigger";
 import type { OrganizationSwitcherItem } from "@/lib/current-user";
 
+import { ThemeToggle } from "@/components/theme/theme-toggle";
+
 export function Header({
   email,
   organizations,
@@ -22,7 +24,7 @@ export function Header({
   const activeOrganizationId = organizations.find((org) => org.isActive)?.organizationId;
 
   return (
-    <header className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b border-gray-200/80 bg-white/90 px-6 py-3.5 backdrop-blur-md transition-shadow">
+    <header className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b border-gray-200/80 bg-white/90 px-6 py-3.5 backdrop-blur-md transition-shadow dark:border-white/10 dark:bg-surface-elevated/90">
       <OrganizationSwitcher organizations={organizations} action={switchOrganizationAction} />
       <div className="flex min-w-0 items-center gap-3 sm:gap-4">
         <GlobalSearch key={activeOrganizationId} />
@@ -31,6 +33,7 @@ export function Header({
           initialUnreadCount={unreadNotificationCount}
           initialNotifications={recentNotifications}
         />
+        <ThemeToggle />
         <div className="hidden min-w-0 items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50/70 px-3 py-1 text-xs font-semibold text-indigo-900 sm:flex">
           <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="min-w-0 max-w-[14rem] truncate" title={email}>

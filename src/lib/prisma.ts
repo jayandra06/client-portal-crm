@@ -22,9 +22,21 @@ function createPrismaClient(): PrismaClient {
     process.env.POSTGRES_PRISMA_URL ||
     process.env.POSTGRES_URL;
 
+  // Supabase, Neon, and other cloud Postgres providers use certificate chains
+  // with custom/self-signed root or intermediate certificates. With Prisma 7
+  // and @prisma/adapter-pg, Node's TLS validator rejects these connections by
+  // default with "self-signed certificate in certificate chain" (P1011).
+  // Relaxing verification for remote hosts allows encrypted TLS without crashing.
+  const isRemote =
+    Boolean(connectionString) &&
+    !process.env.PGLITE_TEST_DB &&
+    !connectionString!.includes("localhost") &&
+    !connectionString!.includes("127.0.0.1");
+
   const adapter = new PrismaPg({
     connectionString,
     ...(process.env.PGLITE_TEST_DB ? { max: 1 } : {}),
+    ...(isRemote ? { ssl: { rejectUnauthorized: false } } : {}),
   });
   return new PrismaClient({ adapter });
 }

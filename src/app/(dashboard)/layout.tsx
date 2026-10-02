@@ -148,7 +148,7 @@ export default async function DashboardLayout({
     // to before this change.
     <div className="flex min-h-screen flex-col">
       <DemoBanner isDemo={isDemoWorkspace} />
-      <div className="bg-surface-recessed flex flex-1 flex-col md:h-screen md:flex-row md:overflow-hidden">
+      <div className="bg-surface-recessed flex flex-1 flex-col md:flex-row">
         {/*
           Aqenra Theme Persistence Phase C2 — authenticated DB -> cookie/
           runtime reconciliation. currentUser already carries themeMode as
@@ -176,7 +176,7 @@ export default async function DashboardLayout({
           once its ancestor chain has somewhere to shrink to. Same root
           cause class as header.tsx's own min-w-0 fix (see that file).
         */}
-        <div className="flex min-w-0 flex-1 flex-col md:h-full md:overflow-y-auto">
+        <div className="flex min-w-0 flex-1 flex-col md:pl-60">
           <Header
             email={user.email ?? ""}
             organizations={organizations}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ToastProvider } from "@/components/toast/toast-provider";
 import { ToastListener } from "@/components/toast/toast-listener";
 import { Footer } from "@/components/layout/footer";
@@ -104,6 +105,7 @@ export default function RootLayout({
           </ToastProvider>
           <Footer />
         </ThemeProvider>
+        <SpeedInsights />
       </body>
     </html>
   );

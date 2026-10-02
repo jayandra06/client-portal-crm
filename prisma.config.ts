@@ -13,6 +13,13 @@ export default defineConfig({
     // CLI operations (validate, generate, migrate) use a direct, non-pooled
     // connection. DATABASE_URL (pgbouncer pooler) stays reserved for the
     // application runtime client in src/lib/prisma.ts.
-    url: process.env["DIRECT_URL"],
+    // Also falls back to POSTGRES_URL_NON_POOLING / POSTGRES_PRISMA_URL for
+    // environments configured with Vercel's Supabase Integration.
+    url:
+      process.env["DIRECT_URL"] ||
+      process.env["POSTGRES_URL_NON_POOLING"] ||
+      process.env["DATABASE_URL"] ||
+      process.env["POSTGRES_PRISMA_URL"] ||
+      process.env["POSTGRES_URL"],
   },
 });

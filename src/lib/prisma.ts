@@ -17,8 +17,13 @@ const globalForPrisma = globalThis as unknown as {
 // behavior is identical, just serialized. Never applies against the real
 // DATABASE_URL (local dev or production), where this env var is never set.
 function createPrismaClient(): PrismaClient {
+  const connectionString =
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_PRISMA_URL ||
+    process.env.POSTGRES_URL;
+
   const adapter = new PrismaPg({
-    connectionString: process.env.DATABASE_URL,
+    connectionString,
     ...(process.env.PGLITE_TEST_DB ? { max: 1 } : {}),
   });
   return new PrismaClient({ adapter });

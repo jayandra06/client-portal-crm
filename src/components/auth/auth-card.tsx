@@ -16,24 +16,35 @@ import { siteConfig } from "@/config/site";
  */
 export function AuthCard({ children }: { children: ReactNode }) {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-gray-50 px-4 py-8">
-      <div className="flex flex-col items-center gap-3">
+    <main className="relative flex min-h-screen flex-col items-center justify-center gap-6 overflow-hidden bg-slate-950 px-4 py-8 text-slate-100">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(99,102,241,0.25),rgba(255,255,255,0))]" />
+      <div className="pointer-events-none absolute bottom-0 right-0 h-96 w-96 rounded-full bg-violet-600/10 blur-3xl" />
+      <div className="pointer-events-none absolute top-1/4 left-0 h-96 w-96 rounded-full bg-indigo-600/10 blur-3xl" />
+
+      <div className="relative z-10 flex flex-col items-center gap-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/hctpl-logo.png"
-          alt="VenSai CRM Logo"
-          className="h-24 w-auto object-contain"
-        />
-        <span className="text-xl font-bold tracking-tight text-gray-900">{siteConfig.name}</span>
+        <div className="rounded-2xl bg-white/10 p-3 backdrop-blur-md border border-white/10 shadow-xl">
+          <img
+            src="/hctpl-logo.png"
+            alt="VenSai CRM Logo"
+            className="h-20 w-auto object-contain filter drop-shadow"
+          />
+        </div>
+        <span className="text-2xl font-extrabold tracking-tight text-white">{siteConfig.name}</span>
+        <span className="text-xs font-semibold uppercase tracking-widest text-indigo-400">Enterprise Agency CRM</span>
       </div>
-      <div className="w-full max-w-sm rounded-lg border border-gray-200 bg-white p-8 shadow-sm">{children}</div>
-      <p className="text-center text-xs text-gray-500">
+
+      <div className="relative z-10 w-full max-w-sm rounded-2xl border border-white/15 bg-white/95 p-8 text-gray-900 shadow-2xl backdrop-blur-xl">
+        {children}
+      </div>
+
+      <p className="relative z-10 text-center text-xs text-slate-400">
         Powered by{" "}
         <a
           href="https://hctpl.net"
           target="_blank"
           rel="noopener noreferrer"
-          className="font-medium text-gray-700 hover:text-gray-900 hover:underline"
+          className="font-semibold text-indigo-300 hover:text-white hover:underline transition-colors"
         >
           Hari Cornucopia Tech Pvt. Ltd
         </a>

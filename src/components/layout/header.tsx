@@ -22,45 +22,25 @@ export function Header({
   const activeOrganizationId = organizations.find((org) => org.isActive)?.organizationId;
 
   return (
-    <header className="border-border-default bg-surface flex flex-wrap items-center justify-between gap-3 border-b px-6 py-4">
+    <header className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b border-gray-200/80 bg-white/90 px-6 py-3.5 backdrop-blur-md transition-shadow">
       <OrganizationSwitcher organizations={organizations} action={switchOrganizationAction} />
-      {/*
-        min-w-0 lets this group actually shrink below its content's
-        intrinsic width when the header wraps onto its own row on a
-        narrow viewport — flex items default to `min-width: auto`, which
-        silently blocks any child's `truncate` from ever taking effect
-        and was the real cause of the horizontal overflow this fixes
-        (the email span below had nowhere to shrink to).
-      */}
-      <div className="flex min-w-0 items-center gap-4">
-        {/*
-          key={activeOrganizationId} forces React to fully unmount and
-          remount GlobalSearch (discarding its search state) whenever the
-          active organization changes — defense-in-depth alongside the
-          search dialog's own modal-blocking (see search-dialog.tsx). No
-          new prop/fetch needed: `organizations` (already server-resolved
-          in (dashboard)/layout.tsx) already carries the active org's id.
-        */}
+      <div className="flex min-w-0 items-center gap-3 sm:gap-4">
         <GlobalSearch key={activeOrganizationId} />
         <AiAssistantTrigger available={aiAssistantAvailable} />
         <NotificationBell
           initialUnreadCount={unreadNotificationCount}
           initialNotifications={recentNotifications}
         />
-        {/*
-          min-w-0 + truncate: an unconstrained-width email (real emails
-          run well past 30 characters) was the dominant contributor to
-          the header's mobile overflow. Full address is still in the DOM
-          (screen readers get it unabridged) and in `title` (hover for
-          sighted mouse users) — only the visual line is ever shortened.
-        */}
-        <span className="text-text-secondary min-w-0 max-w-[7rem] truncate text-sm sm:max-w-[16rem]" title={email}>
-          {email}
-        </span>
+        <div className="hidden min-w-0 items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50/70 px-3 py-1 text-xs font-semibold text-indigo-900 sm:flex">
+          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="min-w-0 max-w-[14rem] truncate" title={email}>
+            {email}
+          </span>
+        </div>
         <form action={signOut} className="shrink-0">
           <button
             type="submit"
-            className="border-border-strong text-text-secondary focus-visible:ring-focus-ring rounded-md border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-[var(--hover)] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+            className="rounded-lg border border-gray-200/90 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-2xs transition-all hover:border-gray-300 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
           >
             Sign out
           </button>

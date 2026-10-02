@@ -16,15 +16,20 @@ export function MetricCard({
   return (
     <Link
       href={href}
-      className={`focus-visible:ring-focus-ring block p-5 transition-colors hover:border-border-strong hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${CARD_SURFACE_CLASSES}`}
+      className="group relative block overflow-hidden rounded-xl border border-gray-200/80 bg-white p-5 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
     >
-      <p className="text-text-muted text-xs font-medium tracking-wide uppercase">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-violet-500 opacity-80 group-hover:opacity-100 transition-opacity" />
+      <p className="text-gray-500 text-xs font-semibold tracking-wider uppercase">
         {label}
       </p>
-      <p className="text-text-primary mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
+      <p className="mt-2 text-2xl font-bold tracking-tight text-gray-900 group-hover:text-indigo-600 transition-colors sm:text-3xl">
         {value}
       </p>
-      {hint && <p className="text-text-muted mt-1 text-xs">{hint}</p>}
+      {hint && (
+        <p className="mt-1.5 inline-flex items-center gap-1 text-xs font-medium text-gray-500">
+          <span>{hint}</span>
+        </p>
+      )}
     </Link>
   );
 }

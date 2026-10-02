@@ -208,12 +208,14 @@ export function computeActiveGroupKey(pathname: string, groups: SidebarNavGroup[
 }
 
 const TOP_LEVEL_ROW_BASE =
-  "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2";
+  "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2";
 const CHILD_ROW_BASE =
-  "block rounded-md px-3 py-1.5 text-sm font-normal transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2";
+  "block rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2";
 
 function activeLinkClasses(active: boolean): string {
-  return active ? "bg-accent text-white" : "text-text-secondary hover:bg-[var(--hover)]";
+  return active
+    ? "bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 text-white shadow-xs shadow-indigo-500/20"
+    : "text-gray-600 hover:bg-indigo-50/70 hover:text-indigo-900";
 }
 
 export function Sidebar({
@@ -230,114 +232,94 @@ export function Sidebar({
   return (
     <nav
       aria-label="Primary"
-      className="border-border-default bg-surface-recessed flex shrink-0 gap-1 overflow-x-auto border-b p-3 md:w-56 md:flex-col md:gap-0.5 md:overflow-x-visible md:border-r md:border-b-0 md:p-4"
+      className="border-gray-200/80 bg-gray-50/80 flex shrink-0 gap-1 overflow-x-auto border-b p-3 md:w-60 md:flex-col md:justify-between md:gap-0.5 md:overflow-x-visible md:border-r md:border-b-0 md:p-4 backdrop-blur-md"
     >
-      <div className="hidden items-center gap-2.5 px-2 pb-4 md:flex">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/hctpl-logo.png"
-          alt="VenSai CRM Logo"
-          className="h-8 w-auto object-contain"
-        />
-        <span className="text-text-primary text-lg font-semibold tracking-tight">
-          {siteConfig.name}
-        </span>
-      </div>
-      {groups.map((group) => {
-        const groupActive = group.key === activeGroupKey;
-        const Icon = group.icon;
+      <div className="flex flex-col gap-1 w-full">
+        <div className="hidden items-center justify-between px-2 pb-5 pt-1 md:flex border-b border-gray-200/60 mb-2">
+          <div className="flex items-center gap-2.5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/hctpl-logo.png"
+              alt="VenSai CRM Logo"
+              className="h-8 w-auto object-contain drop-shadow-xs"
+            />
+            <div className="flex flex-col">
+              <span className="text-gray-900 text-base font-bold tracking-tight leading-tight">
+                {siteConfig.name}
+              </span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600">
+                Agency Edition
+              </span>
+            </div>
+          </div>
+        </div>
+        {groups.map((group) => {
+          const groupActive = group.key === activeGroupKey;
+          const Icon = group.icon;
 
-        // Single-destination group (locked spec §6): a direct top-level
-        // link, labeled with the GROUP's own name (not the one child's
-        // label), so the user still perceives the approved top-level work
-        // area — never an awkward one-item dropdown. The same rule
-        // (links.length === 1) also covers Insights degrading to just
-        // Activity when Analytics/Reports are both permission-hidden.
-        if (group.links.length === 1) {
-          const link = group.links[0];
-          return (
-            <Link
-              key={group.key}
-              href={link.href}
-              aria-current={groupActive ? "page" : undefined}
-              prefetch={disablePrefetch ? false : undefined}
-              className={`${TOP_LEVEL_ROW_BASE} whitespace-nowrap ${activeLinkClasses(groupActive)}`}
-            >
-              <Icon className="h-4 w-4 shrink-0" />
-              <span>{group.label}</span>
-            </Link>
-          );
-        }
-
-        return (
-          <div key={group.key} className="shrink-0 md:shrink">
-            {/*
-              Group-active treatment (locked spec §7/§9): a subtler wash
-              (--selected/--accent-subtle, already documented in
-              globals.css as "future selected-row wash") distinct from a
-              real active LINK's solid bg-accent — this summary is never
-              itself a navigable destination, only the section a real
-              active child currently lives in. `open` is a plain derived
-              boolean, never custom toggle state: React only re-syncs the
-              DOM `open` attribute when this value itself changes between
-              renders (i.e. when navigation actually changes which group
-              is active), so a user's own manual expand/collapse within
-              the same route is never fought (locked spec §5's own
-              "avoid a state model that fights native <details> behavior").
-              flex/flex-row on mobile puts the summary and (when open) its
-              children side by side in the nav's own horizontal scroll
-              row; md:block reverts to <details>'s own normal stacked
-              layout on desktop.
-            */}
-            <details open={groupActive} className="group flex flex-row items-center gap-0.5 md:block">
-              <summary
-                className={`${TOP_LEVEL_ROW_BASE} cursor-pointer list-none whitespace-nowrap [&::-webkit-details-marker]:hidden ${
-                  groupActive ? "bg-[var(--selected)] text-accent" : "text-text-secondary hover:bg-[var(--hover)]"
-                }`}
+          if (group.links.length === 1) {
+            const link = group.links[0];
+            return (
+              <Link
+                key={group.key}
+                href={link.href}
+                aria-current={groupActive ? "page" : undefined}
+                prefetch={disablePrefetch ? false : undefined}
+                className={`${TOP_LEVEL_ROW_BASE} whitespace-nowrap ${activeLinkClasses(groupActive)}`}
               >
                 <Icon className="h-4 w-4 shrink-0" />
-                <span className="flex-1">{group.label}</span>
-                <ChevronDownIcon className="h-3.5 w-3.5 shrink-0 transition-transform group-open:rotate-180" />
-              </summary>
-              {/*
-                Desktop (md:): a normal in-flow vertical accordion — the
-                child list simply pushes subsequent groups down, indented
-                under its own group label, exactly like every other native
-                <details> expansion (md:flex-col).
-                Mobile (below md:): the primary nav is one horizontally-
-                scrolling row (unchanged). Deliberately NOT an absolutely-
-                positioned dropdown here — this <nav> already sets
-                overflow-x-auto, and per the CSS overflow spec a non-
-                visible overflow-x forces overflow-y to compute as
-                non-visible too, so an absolute/floating panel nested
-                inside it risks being silently clipped rather than shown.
-                Instead, an open group's children simply become a few more
-                pill items in the SAME horizontal scroll row, immediately
-                after their own group's summary (flex-row, no wrapping) —
-                genuinely "compact native disclosure... usable on touch"
-                (locked spec §11), never a floating panel, never several
-                screens tall, and immune to the clipping risk above.
-              */}
-              <div className="flex flex-row flex-nowrap gap-0.5 md:flex-col md:gap-0.5 md:pl-6">
-                {group.links.map((link) => {
-                  const childActive = isActive(pathname, link.href);
-                  return (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      aria-current={childActive ? "page" : undefined}
-                      prefetch={disablePrefetch ? false : undefined}
-                      className={`${CHILD_ROW_BASE} whitespace-nowrap ${activeLinkClasses(childActive)}`}
-                    >
-                      {link.label}
-                    </Link>
-                  );
-                })}
-              </div>
-            </details>
-          </div>
-        );
-      })}
+                <span>{group.label}</span>
+              </Link>
+            );
+          }
+
+          return (
+            <div key={group.key} className="shrink-0 md:shrink">
+              <details open={groupActive} className="group flex flex-row items-center gap-0.5 md:block">
+                <summary
+                  className={`${TOP_LEVEL_ROW_BASE} cursor-pointer list-none whitespace-nowrap [&::-webkit-details-marker]:hidden ${
+                    groupActive ? "bg-indigo-100/60 text-indigo-950" : "text-gray-700 hover:bg-indigo-50/70 hover:text-indigo-900"
+                  }`}
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span className="flex-1">{group.label}</span>
+                  <ChevronDownIcon className="h-3.5 w-3.5 shrink-0 transition-transform group-open:rotate-180 opacity-60" />
+                </summary>
+                <div className="flex flex-row flex-nowrap gap-0.5 md:flex-col md:gap-0.5 md:pl-5 md:mt-0.5">
+                  {group.links.map((link) => {
+                    const childActive = isActive(pathname, link.href);
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        aria-current={childActive ? "page" : undefined}
+                        prefetch={disablePrefetch ? false : undefined}
+                        className={`${CHILD_ROW_BASE} whitespace-nowrap ${activeLinkClasses(childActive)}`}
+                      >
+                        {link.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </details>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="hidden md:block pt-6 mt-6 border-t border-gray-200/60 text-center">
+        <p className="text-[11px] font-medium text-gray-500">
+          Powered by{" "}
+          <a
+            href="https://hctpl.net"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-gray-700 hover:text-indigo-600 hover:underline transition-colors"
+          >
+            Hari Cornucopia Tech Pvt. Ltd
+          </a>
+        </p>
+      </div>
     </nav>
   );
 }

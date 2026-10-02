@@ -26,7 +26,12 @@ import { MAX_IMPORT_FILE_SIZE_BYTES, MAX_IMPORT_ROWS } from "@/lib/import/consta
  * row, re-read from there by both preview and execute.
  */
 
-export type ImportFieldOption = { key: string; label: string; required: boolean };
+export type ImportFieldOption = {
+  key: string;
+  label: string;
+  required: boolean;
+  headerAliases: readonly string[];
+};
 
 type Step = "upload" | "mapping" | "preview" | "summary";
 
@@ -252,7 +257,7 @@ export function ImportWizard({
                 {totalRows.toLocaleString()} rows detected. Connect each source column to a CRM field.
               </p>
             </div>
-            <Button type="button" variant="outline" onClick={autoMapColumns}>Auto-map columns</Button>
+            <Button type="button" variant="secondary" onClick={autoMapColumns}>Auto-map columns</Button>
           </div>
 
           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">

@@ -16,17 +16,28 @@ import { siteConfig } from "@/config/site";
  */
 export function AuthCard({ children }: { children: ReactNode }) {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-gray-50 px-4">
-      <div className="flex flex-col items-center gap-2">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-gray-50 px-4 py-8">
+      <div className="flex flex-col items-center gap-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/hctpl-logo.png"
           alt="VenSai CRM Logo"
-          className="h-12 w-auto object-contain"
+          className="h-24 w-auto object-contain"
         />
-        <span className="text-lg font-semibold tracking-tight text-gray-900">{siteConfig.name}</span>
+        <span className="text-xl font-bold tracking-tight text-gray-900">{siteConfig.name}</span>
       </div>
       <div className="w-full max-w-sm rounded-lg border border-gray-200 bg-white p-8 shadow-sm">{children}</div>
+      <p className="text-center text-xs text-gray-500">
+        Powered by{" "}
+        <a
+          href="https://hctpl.net"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-medium text-gray-700 hover:text-gray-900 hover:underline"
+        >
+          Hari Cornucopia Tech Pvt. Ltd
+        </a>
+      </p>
     </main>
   );
 }

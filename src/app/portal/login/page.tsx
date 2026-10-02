@@ -5,6 +5,7 @@ import { getOptionalPortalUser } from "@/lib/current-portal-user";
 import { parseSearchParam, type RawSearchParams } from "@/lib/list-params";
 import { sanitizePortalRedirectPath } from "@/lib/safe-redirect";
 import { CARD_SURFACE_CLASSES } from "@/components/ui/surface";
+import { siteConfig } from "@/config/site";
 import { PortalLoginForm } from "./portal-login-form";
 
 export default async function PortalLoginPage({
@@ -43,7 +44,16 @@ export default async function PortalLoginPage({
   }
 
   return (
-    <main className="bg-surface-recessed flex min-h-screen items-center justify-center px-4">
+    <main className="bg-surface-recessed flex min-h-screen flex-col items-center justify-center gap-6 px-4 py-8">
+      <div className="flex flex-col items-center gap-3">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/hctpl-logo.png"
+          alt="VenSai CRM Logo"
+          className="h-24 w-auto object-contain"
+        />
+        <span className="text-xl font-bold tracking-tight text-gray-900">{siteConfig.name}</span>
+      </div>
       <div className={`w-full max-w-sm p-8 shadow-sm ${CARD_SURFACE_CLASSES}`}>
         <h1 className="text-text-primary mb-6 text-2xl font-semibold tracking-tight">
           Client Portal
@@ -55,6 +65,17 @@ export default async function PortalLoginPage({
         )}
         <PortalLoginForm redirectTo={redirectTo} />
       </div>
+      <p className="text-center text-xs text-gray-500">
+        Powered by{" "}
+        <a
+          href="https://hctpl.net"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-medium text-gray-700 hover:text-gray-900 hover:underline"
+        >
+          Hari Cornucopia Tech Pvt. Ltd
+        </a>
+      </p>
     </main>
   );
 }

@@ -9,7 +9,7 @@ export default function Home() {
         <img
           src="/hctpl-logo.png"
           alt="VenSai CRM Logo"
-          className="mb-4 h-16 w-auto object-contain"
+          className="mb-4 h-24 sm:h-28 w-auto object-contain"
         />
         <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
           {siteConfig.name}
@@ -30,6 +30,17 @@ export default function Home() {
           </Link>
         </div>
       </div>
+      <footer className="mt-12 text-center text-xs text-gray-500">
+        Powered by{" "}
+        <a
+          href="https://hctpl.net"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-medium text-gray-700 hover:text-gray-900 hover:underline"
+        >
+          Hari Cornucopia Tech Pvt. Ltd
+        </a>
+      </footer>
     </main>
   );
 }

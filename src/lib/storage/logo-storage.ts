@@ -58,12 +58,28 @@ export async function uploadLogoObject(
   if (!resolved) return { ok: false, reason: "not_configured" };
 
   try {
-    const { error } = await resolved.storage.from(LOGO_BUCKET).upload(path, body, { contentType, upsert: false });
-    if (error) return { ok: false, reason: "upload_failed" };
+    let { error } = await resolved.storage.from(LOGO_BUCKET).upload(path, body, { contentType, upsert: false });
+    if (
+      error &&
+      (error.message?.toLowerCase().includes("not found") ||
+        String((error as { statusCode?: string | number }).statusCode) === "404" ||
+        (error as { error?: string }).error?.toLowerCase().includes("not found"))
+    ) {
+      const { error: createError } = await resolved.storage.createBucket(LOGO_BUCKET, { public: true });
+      if (!createError) {
+        const retry = await resolved.storage.from(LOGO_BUCKET).upload(path, body, { contentType, upsert: false });
+        error = retry.error;
+      }
+    }
+    if (error) {
+      console.error("[storage] logo upload failed:", error);
+      return { ok: false, reason: "upload_failed" };
+    }
 
     const { data } = resolved.storage.from(LOGO_BUCKET).getPublicUrl(path);
     return { ok: true, publicUrl: data.publicUrl };
-  } catch {
+  } catch (err) {
+    console.error("[storage] logo upload error:", err);
     return { ok: false, reason: "upload_failed" };
   }
 }

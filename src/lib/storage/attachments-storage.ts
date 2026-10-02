@@ -72,10 +72,25 @@ export async function uploadAttachmentObject(
   if (!resolved) return { ok: false, reason: "not_configured" };
 
   try {
-    const { error } = await resolved.storage.from(bucket).upload(path, body, {
+    let { error } = await resolved.storage.from(bucket).upload(path, body, {
       contentType,
       upsert: false,
     });
+    if (
+      error &&
+      (error.message?.toLowerCase().includes("not found") ||
+        String((error as { statusCode?: string | number }).statusCode) === "404" ||
+        (error as { error?: string }).error?.toLowerCase().includes("not found"))
+    ) {
+      const { error: createError } = await resolved.storage.createBucket(bucket, { public: false });
+      if (!createError) {
+        const retry = await resolved.storage.from(bucket).upload(path, body, {
+          contentType,
+          upsert: false,
+        });
+        error = retry.error;
+      }
+    }
     return error ? { ok: false, reason: "upload_failed" } : { ok: true };
   } catch {
     return { ok: false, reason: "upload_failed" };

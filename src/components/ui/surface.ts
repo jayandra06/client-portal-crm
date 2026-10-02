@@ -15,4 +15,4 @@
  * hand-maintained copies of the same tokens, and gives that later phase
  * a ready-made value to adopt.
  */
-export const CARD_SURFACE_CLASSES = "border-border-default bg-surface rounded-lg border";
+export const CARD_SURFACE_CLASSES = "border-gray-200/80 bg-white rounded-xl border shadow-2xs transition-all duration-200 hover:shadow-xs";

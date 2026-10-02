@@ -20,26 +20,9 @@ import { SpinnerIcon } from "@/components/ui/icons";
  * appearance, so no existing caller's rendered output changes.
  */
 const VARIANT_CLASSES = {
-  // Aqenra brand PR 2 — bg-black/hover:bg-gray-800 replaced with the
-  // approved Aqenra Indigo accent tokens (globals.css). Everything else
-  // about this variant (white text, sizing, disabled/loading behavior,
-  // the shared focus-visible ring below) is unchanged.
-  primary: "bg-accent text-white hover:bg-accent-hover",
-  // Design System Phase 2 — border-gray-300/bg-white/text-gray-900 replaced
-  // with semantic tokens so this variant renders correctly on Dark's own
-  // surface (border-strong/bg-surface preserve the exact same relative
-  // weight border-gray-300/bg-white had in Light). hover:bg-[var(--hover)]
-  // — not a Tailwind bg-hover utility — matches the established
-  // Appearance selector convention (--hover is deliberately not mirrored
-  // into @theme inline; see globals.css).
-  secondary: "border border-border-strong bg-surface text-text-primary hover:bg-[var(--hover)]",
-  // text-danger (not a literal red) is safe here: it's a TEXT color, not
-  // a solid white-on-fill button background — --danger is specifically
-  // calibrated to stay legible as text/an outline on both Light and Dark
-  // surfaces (see globals.css's own Dark SEMANTIC comment). hover uses
-  // danger-subtle, the token's own designed "wash over an opaque surface"
-  // pairing (the same pattern StatusBadge already relies on).
-  dangerOutline: "border border-border-strong bg-surface text-danger hover:bg-danger-subtle",
+  primary: "bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-xs shadow-indigo-500/20 hover:from-indigo-700 hover:to-violet-700 hover:shadow-md hover:shadow-indigo-500/30",
+  secondary: "border border-gray-200/90 bg-white text-gray-800 shadow-2xs hover:border-gray-300 hover:bg-gray-50/80",
+  dangerOutline: "border border-red-200 bg-white text-red-600 hover:bg-red-50 hover:border-red-300",
 } as const;
 
 export type ButtonVariant = keyof typeof VARIANT_CLASSES;
@@ -54,7 +37,7 @@ export function Button({
 }: ButtonHTMLAttributes<HTMLButtonElement> & { loading?: boolean; variant?: ButtonVariant }) {
   return (
     <button
-      className={`inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${VARIANT_CLASSES[variant]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100 ${VARIANT_CLASSES[variant]} ${className}`}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       {...props}

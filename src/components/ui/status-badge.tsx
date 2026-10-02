@@ -196,7 +196,7 @@ export function StatusBadge({ status, label, tone: toneOverride }: { status: str
   const tone = toneOverride ?? STATUS_TONES[status] ?? "neutral";
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${TONE_CLASSES[tone]}`}
+      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold shadow-2xs ${TONE_CLASSES[tone]}`}
     >
       {label ?? formatStatusLabel(status)}
     </span>

@@ -24,7 +24,7 @@ export function Header({
   const activeOrganizationId = organizations.find((org) => org.isActive)?.organizationId;
 
   return (
-    <header className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b border-gray-200/80 bg-white/90 px-6 py-3.5 backdrop-blur-md transition-shadow dark:border-white/10 dark:bg-surface-elevated/90">
+    <header className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b border-border-default bg-surface/90 px-6 py-3.5 backdrop-blur-md transition-shadow">
       <OrganizationSwitcher organizations={organizations} action={switchOrganizationAction} />
       <div className="flex min-w-0 items-center gap-3 sm:gap-4">
         <GlobalSearch key={activeOrganizationId} />
@@ -34,7 +34,7 @@ export function Header({
           initialNotifications={recentNotifications}
         />
         <ThemeToggle />
-        <div className="hidden min-w-0 items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50/70 px-3 py-1 text-xs font-semibold text-indigo-900 sm:flex">
+        <div className="hidden min-w-0 items-center gap-2 rounded-full border border-border-default bg-surface-recessed px-3 py-1 text-xs font-semibold text-text-primary sm:flex">
           <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="min-w-0 max-w-[14rem] truncate" title={email}>
             {email}
@@ -43,7 +43,7 @@ export function Header({
         <form action={signOut} className="shrink-0">
           <button
             type="submit"
-            className="rounded-lg border border-gray-200/90 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-2xs transition-all hover:border-gray-300 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+            className="rounded-lg border border-border-default bg-surface px-3 py-1.5 text-xs font-semibold text-text-primary shadow-2xs transition-all hover:bg-[var(--hover)] hover:border-border-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
           >
             Sign out
           </button>

@@ -21,8 +21,8 @@ import { SpinnerIcon } from "@/components/ui/icons";
  */
 const VARIANT_CLASSES = {
   primary: "bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-xs shadow-indigo-500/20 hover:from-indigo-700 hover:to-violet-700 hover:shadow-md hover:shadow-indigo-500/30",
-  secondary: "border border-gray-200/90 bg-white text-gray-800 shadow-2xs hover:border-gray-300 hover:bg-gray-50/80",
-  dangerOutline: "border border-red-200 bg-white text-red-600 hover:bg-red-50 hover:border-red-300",
+  secondary: "border border-border-default bg-surface text-text-primary shadow-2xs hover:border-border-strong hover:bg-[var(--hover)]",
+  dangerOutline: "border border-danger/30 bg-surface text-danger hover:bg-danger-subtle hover:border-danger/60",
 } as const;
 
 export type ButtonVariant = keyof typeof VARIANT_CLASSES;

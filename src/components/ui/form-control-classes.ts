@@ -24,6 +24,6 @@ export function formControlClasses(invalid: boolean): string {
   return `mt-1 block w-full rounded-lg border bg-surface px-3.5 py-2 text-sm text-text-primary shadow-2xs placeholder:text-text-muted transition-all duration-200 focus:outline-none disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-[var(--disabled)] ${
     invalid
       ? "border-danger focus:border-danger focus:ring-2 focus:ring-danger/20"
-      : "border-gray-200/90 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 hover:border-gray-300"
+      : "border-border-default focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 hover:border-border-strong"
   }`;
 }

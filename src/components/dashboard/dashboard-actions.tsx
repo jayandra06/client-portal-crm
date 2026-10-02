@@ -32,13 +32,13 @@ export function DashboardActions() {
       </Link>
       <Link
         href="/invoices/new"
-        className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-xs transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-border-default bg-surface px-4 py-2 text-sm font-semibold text-text-primary shadow-xs transition-all duration-200 hover:border-border-strong hover:bg-[var(--hover)] focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
       >
         <span>Create invoice</span>
       </Link>
       <Link
         href="/tasks?overdue=true"
-        className="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50/60 px-4 py-2 text-sm font-semibold text-amber-800 transition-all duration-200 hover:border-amber-300 hover:bg-amber-100/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-sm font-semibold text-amber-500 transition-all duration-200 hover:border-amber-500/50 hover:bg-amber-500/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
       >
         <span>View overdue tasks</span>
       </Link>

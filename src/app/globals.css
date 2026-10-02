@@ -372,9 +372,9 @@ body {
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-  -webkit-text-fill-color: #111827;
-  box-shadow: 0 0 0 1000px #ffffff inset;
-  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+  -webkit-text-fill-color: var(--text-primary);
+  box-shadow: 0 0 0 1000px var(--surface) inset;
+  -webkit-box-shadow: 0 0 0 1000px var(--surface) inset;
   transition: background-color 9999s ease-in-out 0s;
 }
 
@@ -397,6 +397,11 @@ li[id^="comment-"]:target {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(229, 231, 235, 0.8);
+}
+
+:root[data-theme="dark"] .glass-panel {
+  background: rgba(27, 31, 38, 0.85);
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
 .glow-card {

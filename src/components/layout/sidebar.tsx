@@ -214,8 +214,8 @@ const CHILD_ROW_BASE =
 
 function activeLinkClasses(active: boolean): string {
   return active
-    ? "bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 text-white shadow-xs shadow-indigo-500/20"
-    : "text-gray-600 hover:bg-indigo-50/70 hover:text-indigo-900";
+    ? "bg-accent text-white shadow-xs shadow-accent/20 font-semibold"
+    : "text-text-secondary hover:bg-[var(--hover)] hover:text-text-primary";
 }
 
 export function Sidebar({
@@ -232,10 +232,10 @@ export function Sidebar({
   return (
     <nav
       aria-label="Primary"
-      className="border-gray-200/80 bg-gray-50/80 flex shrink-0 gap-1 overflow-x-auto border-b p-3 md:w-60 md:flex-col md:justify-between md:gap-0.5 md:overflow-x-visible md:border-r md:border-b-0 md:p-4 backdrop-blur-md"
+      className="border-border-default bg-surface-recessed flex shrink-0 gap-1 overflow-x-auto border-b p-3 md:w-60 md:flex-col md:justify-between md:gap-0.5 md:overflow-x-visible md:border-r md:border-b-0 md:p-4 backdrop-blur-md"
     >
       <div className="flex flex-col gap-1 w-full">
-        <div className="hidden items-center justify-between px-2 pb-5 pt-1 md:flex border-b border-gray-200/60 mb-2">
+        <div className="hidden items-center justify-between px-2 pb-5 pt-1 md:flex border-b border-border-default mb-2">
           <div className="flex items-center gap-2.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -244,10 +244,10 @@ export function Sidebar({
               className="h-8 w-auto object-contain drop-shadow-xs"
             />
             <div className="flex flex-col">
-              <span className="text-gray-900 text-base font-bold tracking-tight leading-tight">
+              <span className="text-text-primary text-base font-bold tracking-tight leading-tight">
                 {siteConfig.name}
               </span>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-accent">
                 Agency Edition
               </span>
             </div>
@@ -278,7 +278,7 @@ export function Sidebar({
               <details open={groupActive} className="group flex flex-row items-center gap-0.5 md:block">
                 <summary
                   className={`${TOP_LEVEL_ROW_BASE} cursor-pointer list-none whitespace-nowrap [&::-webkit-details-marker]:hidden ${
-                    groupActive ? "bg-indigo-100/60 text-indigo-950" : "text-gray-700 hover:bg-indigo-50/70 hover:text-indigo-900"
+                    groupActive ? "bg-accent/15 text-accent font-semibold" : "text-text-secondary hover:bg-[var(--hover)] hover:text-text-primary"
                   }`}
                 >
                   <Icon className="h-4 w-4 shrink-0" />
@@ -307,14 +307,14 @@ export function Sidebar({
         })}
       </div>
 
-      <div className="hidden md:block pt-6 mt-6 border-t border-gray-200/60 text-center">
-        <p className="text-[11px] font-medium text-gray-500">
+      <div className="hidden md:block pt-6 mt-6 border-t border-border-default text-center">
+        <p className="text-[11px] font-medium text-text-muted">
           Powered by{" "}
           <a
             href="https://hctpl.net"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-semibold text-gray-700 hover:text-indigo-600 hover:underline transition-colors"
+            className="font-semibold text-text-secondary hover:text-accent hover:underline transition-colors"
           >
             Hari Cornucopia Tech Pvt. Ltd
           </a>

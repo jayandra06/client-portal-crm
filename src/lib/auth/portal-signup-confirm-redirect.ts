@@ -1,23 +1,6 @@
 import { sanitizePortalRedirectPath } from "@/lib/safe-redirect";
 import type { ValidPortalSignupInvitation } from "@/lib/invitations/resolve-portal-signup-invitation";
-
-/**
- * Same getAppBaseUrl() shape already independently duplicated into every
- * other absolute-URL builder in this codebase (src/lib/email/invitations.ts
- * and its sibling email modules, src/lib/auth/signup-confirm-redirect.ts,
- * src/lib/billing/provider/paddle-provider.ts,
- * src/lib/organization-setup/domain-settings.ts) — this is that same
- * established, deliberately-per-module convention, not a new pattern.
- */
-function getAppBaseUrl(): string {
-  const explicit = process.env.APP_BASE_URL;
-  if (explicit) return explicit.replace(/\/+$/, "");
-
-  const vercelUrl = process.env.VERCEL_URL;
-  if (vercelUrl) return `https://${vercelUrl}`.replace(/\/+$/, "");
-
-  return "http://localhost:3000";
-}
+import { getAppBaseUrl } from "@/lib/app-url";
 
 /**
  * Portal signup-confirmation defect fix. The Client Portal counterpart to

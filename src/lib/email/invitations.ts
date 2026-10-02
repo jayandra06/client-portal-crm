@@ -17,22 +17,7 @@ export type SendInvitationEmailResult =
 /**
  * Resolves the base URL invitation links are built from. Deliberately
  * server-only and never derived from a request's Host/X-Forwarded-Host
- * header (both are attacker-controllable) or from window.location (email
- * rendering never runs in a browser). APP_BASE_URL is the explicit,
- * trusted override; VERCEL_URL (set automatically by Vercel for every
- * deployment, preview or production — not user input) is a safe fallback
- * so Preview deployments work with zero extra config; localhost is the
- * last resort for local dev.
- */
-function getAppBaseUrl(): string {
-  const explicit = process.env.APP_BASE_URL;
-  if (explicit) return explicit.replace(/\/+$/, "");
-
-  const vercelUrl = process.env.VERCEL_URL;
-  if (vercelUrl) return `https://${vercelUrl}`.replace(/\/+$/, "");
-
-  return "http://localhost:3000";
-}
+import { getAppBaseUrl } from "@/lib/app-url";
 
 function escapeHtml(value: string): string {
   return value

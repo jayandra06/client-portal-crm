@@ -13,22 +13,7 @@ export type SendPasswordResetEmailResult =
   | { delivered: true }
   | { delivered: false; reason: "not_configured" | "provider_error" | "network_error" };
 
-/**
- * Same reasoning as src/lib/email/invitations.ts's getAppBaseUrl (this
- * codebase's own established convention: each email module keeps its own
- * copy rather than sharing one via import — see also client-portal-
- * invitations.ts and deliver-notification-email.ts). Never derived from a
- * request header or window.location — both wrong or unavailable here.
- */
-function getAppBaseUrl(): string {
-  const explicit = process.env.APP_BASE_URL;
-  if (explicit) return explicit.replace(/\/+$/, "");
-
-  const vercelUrl = process.env.VERCEL_URL;
-  if (vercelUrl) return `https://${vercelUrl}`.replace(/\/+$/, "");
-
-  return "http://localhost:3000";
-}
+import { getAppBaseUrl } from "@/lib/app-url";
 
 function escapeHtml(value: string): string {
   return value

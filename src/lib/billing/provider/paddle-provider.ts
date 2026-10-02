@@ -412,19 +412,7 @@ function parsePaddleWebhookEvent(rawBody: string, config: PaddleProviderConfig):
 // not user input) is a safe fallback so Preview deployments work with
 // zero extra config; localhost is the last resort for local dev.
 // Deliberately duplicated locally rather than imported from one of those
-// email modules — this file has no existing dependency on
-// src/lib/email/*, and those modules don't export this helper publicly;
-// matches this codebase's own established preference for a small local
-// copy over a cross-domain import for a five-line function.
-function getAppBaseUrl(): string {
-  const explicit = process.env.APP_BASE_URL;
-  if (explicit) return explicit.replace(/\/+$/, "");
-
-  const vercelUrl = process.env.VERCEL_URL;
-  if (vercelUrl) return `https://${vercelUrl}`.replace(/\/+$/, "");
-
-  return "http://localhost:3000";
-}
+import { getAppBaseUrl } from "@/lib/app-url";
 
 /**
  * Builds the URL `createCheckoutSession` hands back as its own `{ url }`

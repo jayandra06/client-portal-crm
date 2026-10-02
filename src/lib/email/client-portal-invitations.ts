@@ -13,23 +13,7 @@ export type SendClientPortalInvitationEmailResult =
   | { delivered: true }
   | { delivered: false; reason: "not_configured" | "provider_error" | "network_error" };
 
-/**
- * Same reasoning as src/lib/email/invitations.ts's getAppBaseUrl: never
- * derived from a request's Host header or window.location, both of which
- * are the wrong trust boundary for a link rendered inside an email.
- * Deliberately its own copy rather than a shared import, so a future
- * change to the staff invitation flow can never alter Client Portal
- * invitation links (or vice versa) by accident.
- */
-function getAppBaseUrl(): string {
-  const explicit = process.env.APP_BASE_URL;
-  if (explicit) return explicit.replace(/\/+$/, "");
-
-  const vercelUrl = process.env.VERCEL_URL;
-  if (vercelUrl) return `https://${vercelUrl}`.replace(/\/+$/, "");
-
-  return "http://localhost:3000";
-}
+import { getAppBaseUrl } from "@/lib/app-url";
 
 function escapeHtml(value: string): string {
   return value

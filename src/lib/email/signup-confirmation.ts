@@ -1,5 +1,6 @@
 import { sendEmailViaResend, type SendEmailFn } from "./resend-client";
 import { buildEmailLegalFooterHtml, buildEmailLegalFooterText } from "./legal-footer";
+import { siteConfig } from "@/config/site";
 
 /**
  * Signup-confirmation defect fix (Invited Signup Confirmation Redirect
@@ -49,7 +50,7 @@ function renderHtml(params: { confirmUrl: string; isInvited: boolean }): string 
   return `<!doctype html>
 <html>
   <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; color: #111827; line-height: 1.5; margin: 0; padding: 24px;">
-    <p>Confirm your email to finish creating your Aqenra account.</p>
+    <p>Confirm your email to finish creating your ${siteConfig.name} account.</p>
     <p style="margin: 24px 0;">
       <a href="${confirmUrl}" style="display: inline-block; background: #000000; color: #ffffff; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600;">
         Confirm your account
@@ -61,7 +62,7 @@ function renderHtml(params: { confirmUrl: string; isInvited: boolean }): string 
     </p>
     ${invitedNote}
     <p style="color: #6b7280; font-size: 12px; margin-top: 32px;">
-      If you didn't try to create an Aqenra account, you can safely ignore this email.
+      If you didn't try to create a ${siteConfig.name} account, you can safely ignore this email.
     </p>
     ${buildEmailLegalFooterHtml()}
   </body>
@@ -70,12 +71,12 @@ function renderHtml(params: { confirmUrl: string; isInvited: boolean }): string 
 
 function renderText(params: { confirmUrl: string; isInvited: boolean }): string {
   return [
-    "Confirm your email to finish creating your Aqenra account.",
+    `Confirm your email to finish creating your ${siteConfig.name} account.`,
     "",
     `Confirm your account: ${params.confirmUrl}`,
     ...(params.isInvited ? ["", "After confirming, you'll return to your invitation."] : []),
     "",
-    "If you didn't try to create an Aqenra account, you can safely ignore this email.",
+    `If you didn't try to create a ${siteConfig.name} account, you can safely ignore this email.`,
     buildEmailLegalFooterText(),
   ].join("\n");
 }
@@ -94,7 +95,7 @@ export function buildSignupConfirmationEmailContent(params: {
   isInvited: boolean;
 }): SignupConfirmationEmailContent {
   return {
-    subject: "Confirm your Aqenra account",
+    subject: `Confirm your ${siteConfig.name} account`,
     html: renderHtml(params),
     text: renderText(params),
   };

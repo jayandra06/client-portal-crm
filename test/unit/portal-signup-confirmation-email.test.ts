@@ -7,9 +7,9 @@ import {
 const CONFIRM_URL = "https://app.aqenra.com/auth/confirm?token_hash=abc123&type=portal_signup&next=%2Fportal";
 
 describe("buildPortalSignupConfirmationEmailContent", () => {
-  it("subject is Aqenra Client Portal branded, never mentions Supabase", () => {
+  it("subject is VenSai CRM Client Portal branded, never mentions Supabase", () => {
     const content = buildPortalSignupConfirmationEmailContent({ confirmUrl: CONFIRM_URL });
-    expect(content.subject).toBe("Confirm your Aqenra Client Portal account");
+    expect(content.subject).toBe("Confirm your VenSai CRM Client Portal account");
     expect(content.html).not.toContain("Supabase");
     expect(content.text).not.toContain("Supabase");
   });
@@ -74,7 +74,7 @@ describe("sendPortalSignupConfirmationEmail", () => {
       expect.objectContaining({
         to: "client@example.com",
         from: "Aqenra <no-reply@aqenra.com>",
-        subject: "Confirm your Aqenra Client Portal account",
+        subject: "Confirm your VenSai CRM Client Portal account",
       }),
     );
   });

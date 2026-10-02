@@ -58,16 +58,7 @@ export function isEligibleForRetryClaim(
   return false;
 }
 
-/** Same reasoning as deliver-notification-email.ts's own copy — never derived from a request header, kept as its own copy per this app's established convention (see src/lib/email/invitations.ts vs client-portal-invitations.ts). */
-function getAppBaseUrl(): string {
-  const explicit = process.env.APP_BASE_URL;
-  if (explicit) return explicit.replace(/\/+$/, "");
-
-  const vercelUrl = process.env.VERCEL_URL;
-  if (vercelUrl) return `https://${vercelUrl}`.replace(/\/+$/, "");
-
-  return "http://localhost:3000";
-}
+import { getAppBaseUrl } from "@/lib/app-url";
 
 /**
  * Background retry for notification email delivery — the counterpart to

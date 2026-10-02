@@ -59,16 +59,7 @@ const DEEP_LINK_PATH: Record<ActivityEntityType, (entityId: string) => string> =
   CONTRACT: (id) => `/contracts/${id}`,
 } as Record<ActivityEntityType, (entityId: string) => string>;
 
-/** Same reasoning as deliver-notification-email.ts's/retry-notification-deliveries.ts's own copies — never derived from a request header, kept as its own copy per this app's established convention. */
-export function getAppBaseUrl(): string {
-  const explicit = process.env.APP_BASE_URL;
-  if (explicit) return explicit.replace(/\/+$/, "");
-
-  const vercelUrl = process.env.VERCEL_URL;
-  if (vercelUrl) return `https://${vercelUrl}`.replace(/\/+$/, "");
-
-  return "http://localhost:3000";
-}
+export { getAppBaseUrl } from "@/lib/app-url";
 
 export type BuildSlackMessageParams = {
   eventKey: IntegrationEventKey;

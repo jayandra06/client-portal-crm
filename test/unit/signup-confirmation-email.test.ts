@@ -4,9 +4,9 @@ import { buildSignupConfirmationEmailContent, sendSignupConfirmationEmail } from
 const CONFIRM_URL = "https://app.aqenra.com/auth/confirm?token_hash=abc123&type=signup&next=%2Fdashboard";
 
 describe("buildSignupConfirmationEmailContent", () => {
-  it("subject is Aqenra-branded, never mentions Supabase", () => {
+  it("subject is VenSai CRM-branded, never mentions Supabase", () => {
     const content = buildSignupConfirmationEmailContent({ confirmUrl: CONFIRM_URL, isInvited: false });
-    expect(content.subject).toBe("Confirm your Aqenra account");
+    expect(content.subject).toBe("Confirm your VenSai CRM account");
     expect(content.html).not.toContain("Supabase");
     expect(content.text).not.toContain("Supabase");
   });
@@ -89,7 +89,7 @@ describe("sendSignupConfirmationEmail", () => {
       expect.objectContaining({
         to: "member@example.com",
         from: "Aqenra <no-reply@aqenra.com>",
-        subject: "Confirm your Aqenra account",
+        subject: "Confirm your VenSai CRM account",
       }),
     );
   });

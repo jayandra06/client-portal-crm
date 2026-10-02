@@ -1,5 +1,6 @@
 import { sendEmailViaResend, type SendEmailFn } from "./resend-client";
 import { buildEmailLegalFooterHtml, buildEmailLegalFooterText } from "./legal-footer";
+import { siteConfig } from "@/config/site";
 
 /**
  * Portal signup-confirmation defect fix. The Client Portal counterpart to
@@ -43,7 +44,7 @@ function renderHtml(params: { confirmUrl: string }): string {
   return `<!doctype html>
 <html>
   <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; color: #111827; line-height: 1.5; margin: 0; padding: 24px;">
-    <p>Confirm your email to finish creating your Client Portal account.</p>
+    <p>Confirm your email to finish creating your ${siteConfig.name} Client Portal account.</p>
     <p style="margin: 24px 0;">
       <a href="${confirmUrl}" style="display: inline-block; background: #000000; color: #ffffff; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600;">
         Confirm your account
@@ -54,7 +55,7 @@ function renderHtml(params: { confirmUrl: string }): string {
       <span style="word-break: break-all;">${confirmUrl}</span>
     </p>
     <p style="color: #6b7280; font-size: 12px; margin-top: 32px;">
-      If you didn't try to create a Client Portal account, you can safely ignore this email.
+      If you didn't try to create a ${siteConfig.name} Client Portal account, you can safely ignore this email.
     </p>
     ${buildEmailLegalFooterHtml()}
   </body>
@@ -63,11 +64,11 @@ function renderHtml(params: { confirmUrl: string }): string {
 
 function renderText(params: { confirmUrl: string }): string {
   return [
-    "Confirm your email to finish creating your Client Portal account.",
+    `Confirm your email to finish creating your ${siteConfig.name} Client Portal account.`,
     "",
     `Confirm your account: ${params.confirmUrl}`,
     "",
-    "If you didn't try to create a Client Portal account, you can safely ignore this email.",
+    `If you didn't try to create a ${siteConfig.name} Client Portal account, you can safely ignore this email.`,
     buildEmailLegalFooterText(),
   ].join("\n");
 }
@@ -82,7 +83,7 @@ export type PortalSignupConfirmationEmailContent = { subject: string; html: stri
  */
 export function buildPortalSignupConfirmationEmailContent(params: { confirmUrl: string }): PortalSignupConfirmationEmailContent {
   return {
-    subject: "Confirm your Aqenra Client Portal account",
+    subject: `Confirm your ${siteConfig.name} Client Portal account`,
     html: renderHtml(params),
     text: renderText(params),
   };

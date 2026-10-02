@@ -143,16 +143,7 @@ export function shouldDeliverNotificationEmail(params: {
   return { deliver: true };
 }
 
-/** Same reasoning as src/lib/email/invitations.ts's own copy — never derived from a request header. */
-function getAppBaseUrl(): string {
-  const explicit = process.env.APP_BASE_URL;
-  if (explicit) return explicit.replace(/\/+$/, "");
-
-  const vercelUrl = process.env.VERCEL_URL;
-  if (vercelUrl) return `https://${vercelUrl}`.replace(/\/+$/, "");
-
-  return "http://localhost:3000";
-}
+import { getAppBaseUrl } from "@/lib/app-url";
 
 export type DeliverySummary = {
   attempted: number;

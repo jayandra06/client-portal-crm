@@ -1,22 +1,4 @@
-/**
- * Deliberately its own copy of getAppBaseUrl rather than a shared import —
- * matches the established convention already followed by invitations.ts,
- * client-portal-invitations.ts, and password-reset.ts (each keeps its own
- * copy so one flow's link resolution can never change another's by
- * accident). This module is different: it's genuinely shared, non-flow-
- * specific legal boilerplate, so its rendering logic (below) IS shared,
- * one place, so the address/contact/links a recipient sees are always
- * consistent and only ever need updating in one place.
- */
-function getAppBaseUrl(): string {
-  const explicit = process.env.APP_BASE_URL;
-  if (explicit) return explicit.replace(/\/+$/, "");
-
-  const vercelUrl = process.env.VERCEL_URL;
-  if (vercelUrl) return `https://${vercelUrl}`.replace(/\/+$/, "");
-
-  return "http://localhost:3000";
-}
+import { getAppBaseUrl } from "@/lib/app-url";
 
 /**
  * Appended to every transactional email this app sends (invitations,

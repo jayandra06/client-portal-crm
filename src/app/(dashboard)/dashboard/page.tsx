@@ -13,74 +13,33 @@ import { buildVisibleOnboardingProgress } from "@/lib/onboarding/visible-progres
 import { isEligibleForSampleData } from "@/lib/onboarding/sample-data";
 import { getDashboardAnalytics } from "./query";
 
-/**
- * Dashboard Redesign — an operational work center, not a reporting page.
- * Final structure: header + quick actions, conditional Onboarding/
- * sample-data (preserved exactly), a five-card KPI row, Needs Attention,
- * Today, and a bounded Recent Activity preview. The old page-level period
- * selector, Revenue-over-time chart, three status-breakdown cards, and
- * the Upcoming-tasks/Overdue-items/Recent-invoices bottom trio are all
- * removed from THIS page — none of their underlying data/queries were
- * deleted (getDashboardAnalytics still computes and returns every one of
- * them unchanged, since getOrganizationSummary's own AI-tool contract
- * still reads several of those exact fields) — only this page's own
- * rendering of them.
- *
- * `getDashboardAnalytics` still takes a `period` argument (never removed
- * — see its own doc comment) purely because getOrganizationSummary's own
- * existing call site still passes DEFAULT_DASHBOARD_PERIOD; this page no
- * longer has a period selector, so it passes that exact same fixed
- * constant rather than reading anything from searchParams. No `period`/
- * `?period=` value is ever read from the URL here anymore.
- */
 export default async function DashboardPage() {
-  // organizationId always comes from the session/cookie. Onboarding
-  // Redesign — membership.role is threaded into the visible-progress
-  // model below (never accepted from the client) so a MEMBER/ADMIN never
-  // receives a Company Profile/Invite CTA they'd be rejected from.
   const { organizationId, membership } = await getCurrentMembership();
   const now = new Date();
-
   const [analytics, onboardingSignals, sampleDataEligible] = await Promise.all([
     getDashboardAnalytics({ organizationId, period: DEFAULT_DASHBOARD_PERIOD, now }),
-    // One shared raw-signal query backs both the new 5-step visible model
-    // and the dismiss check below — never a second, duplicate query, and
-    // never the legacy 11-step buildOnboardingProgress() at all here (that
-    // full computation still exists, unchanged, for Platform Admin/
-    // Analytics — just not needed on this page anymore).
     getOrganizationOnboardingSignals(organizationId),
-    // Demo Vs Real Workspace Separation §9 — server-resolved only; the
-    // component itself never guesses its own eligibility.
     isEligibleForSampleData(organizationId),
   ]);
-
   const onboardingProgress = buildVisibleOnboardingProgress(onboardingSignals, membership.role);
-  // The legacy FINISH row remains the one dismiss signal (locked spec §6/
-  // §10) — unchanged mechanism, just read directly off the same raw
-  // signals rather than the full legacy summary.
   const isOnboardingDismissed = onboardingSignals.actedStepKeys.has("FINISH");
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          {/* Stage 6 audit fix: focus-return target for
-              DismissOnboardingButton — see that component's own comment on
-              why this uses plain `focus:` rather than `focus-visible:`
-              (never in the tab order, only ever programmatically focused). */}
-          <h1
-            id={ONBOARDING_DISMISS_RETURN_FOCUS_ID}
-            tabIndex={-1}
-            className="text-text-primary focus:ring-focus-ring rounded text-2xl font-semibold tracking-tight focus:outline-none focus:ring-2 focus:ring-offset-2"
-          >
-            Dashboard
-          </h1>
-          <p className="text-text-secondary mt-1 text-sm">
-            An overview of your clients, projects, tasks, and invoices.
-          </p>
+    <div className="flex flex-col gap-8">
+      <section className="relative overflow-hidden rounded-3xl border border-border-default bg-[linear-gradient(135deg,var(--accent)_0%,#5148a0_58%,#8b7cff_100%)] p-6 text-white shadow-lg sm:p-8">
+        <div className="relative z-10 flex flex-wrap items-end justify-between gap-6">
+          <div className="max-w-2xl">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">Workspace overview</p>
+            <h1 id={ONBOARDING_DISMISS_RETURN_FOCUS_ID} tabIndex={-1} className="rounded text-3xl font-semibold tracking-tight focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent sm:text-4xl">
+              Dashboard
+            </h1>
+            <p className="mt-3 max-w-xl text-sm leading-6 text-white/75">Your calm, focused view of the work that moves the business forward.</p>
+          </div>
+          <DashboardActions />
         </div>
-        <DashboardActions />
-      </div>
+        <div className="pointer-events-none absolute -right-20 -top-24 size-72 rounded-full bg-white/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-28 left-1/3 size-64 rounded-full bg-fuchsia-300/20 blur-3xl" />
+      </section>
 
       <OnboardingCard progress={onboardingProgress} isDismissed={isOnboardingDismissed} />
       <StartWithSampleData eligible={sampleDataEligible} />
@@ -89,31 +48,12 @@ export default async function DashboardPage() {
         <MetricCard label="Clients" value={analytics.kpis.totalClients} href="/clients" />
         <MetricCard label="Active projects" value={analytics.kpis.activeProjects} href="/projects" />
         <MetricCard label="Open tasks" value={analytics.kpis.openTasks} href="/tasks" />
-        <MetricCard
-          label="Outstanding invoices"
-          value={analytics.currency ? formatCurrency(analytics.kpis.outstandingAmount, analytics.currency) : "—"}
-          href="/invoices"
-          hint={`${analytics.kpis.outstandingCount} ${analytics.kpis.outstandingCount === 1 ? "invoice" : "invoices"}`}
-        />
-        <MetricCard
-          label="Revenue"
-          value={analytics.currency ? formatCurrency(analytics.kpis.paidThisMonth, analytics.currency) : "—"}
-          href="/invoices"
-          hint="Paid this month"
-        />
+        <MetricCard label="Outstanding invoices" value={analytics.currency ? formatCurrency(analytics.kpis.outstandingAmount, analytics.currency) : "—"} href="/invoices" hint={`${analytics.kpis.outstandingCount} ${analytics.kpis.outstandingCount === 1 ? "invoice" : "invoices"}`} />
+        <MetricCard label="Revenue" value={analytics.currency ? formatCurrency(analytics.kpis.paidThisMonth, analytics.currency) : "—"} href="/invoices" hint="Paid this month" />
       </div>
 
-      <NeedsAttention
-        overdueTasksCount={analytics.kpis.overdueTasksCount}
-        overdueTasks={analytics.overdueTasks}
-        overdueInvoicesCount={analytics.needsAttention.overdueInvoicesCount}
-        overdueInvoices={analytics.needsAttention.overdueInvoices}
-        unsignedContractsCount={analytics.needsAttention.unsignedContractsCount}
-        unsignedContracts={analytics.needsAttention.unsignedContracts}
-      />
-
+      <NeedsAttention overdueTasksCount={analytics.kpis.overdueTasksCount} overdueTasks={analytics.overdueTasks} overdueInvoicesCount={analytics.needsAttention.overdueInvoicesCount} overdueInvoices={analytics.needsAttention.overdueInvoices} unsignedContractsCount={analytics.needsAttention.unsignedContractsCount} unsignedContracts={analytics.needsAttention.unsignedContracts} />
       <TodaySection tasks={analytics.today.tasks} events={analytics.today.events} />
-
       <RecentActivity items={analytics.recentActivity} />
     </div>
   );

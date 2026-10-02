@@ -14,9 +14,6 @@ export type SendInvitationEmailResult =
   | { delivered: true }
   | { delivered: false; reason: "not_configured" | "provider_error" | "network_error" };
 
-/**
- * Resolves the base URL invitation links are built from. Deliberately
- * server-only and never derived from a request's Host/X-Forwarded-Host
 import { getAppBaseUrl } from "@/lib/app-url";
 
 function escapeHtml(value: string): string {

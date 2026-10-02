@@ -59,7 +59,8 @@ const DEEP_LINK_PATH: Record<ActivityEntityType, (entityId: string) => string> =
   CONTRACT: (id) => `/contracts/${id}`,
 } as Record<ActivityEntityType, (entityId: string) => string>;
 
-export { getAppBaseUrl } from "@/lib/app-url";
+import { getAppBaseUrl } from "@/lib/app-url";
+export { getAppBaseUrl };
 
 export type BuildSlackMessageParams = {
   eventKey: IntegrationEventKey;

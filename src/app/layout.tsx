@@ -23,6 +23,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: siteConfig.name,
   description: siteConfig.description,
+  icons: {
+    icon: "/hctpl-logo.png",
+    shortcut: "/hctpl-logo.png",
+    apple: "/hctpl-logo.png",
+  },
 };
 
 /**

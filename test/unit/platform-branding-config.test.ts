@@ -27,7 +27,7 @@ describe("getPlatformBranding", () => {
     const branding = getPlatformBranding();
 
     expect(branding).toEqual({
-      name: "Aqenra",
+      name: "VenSai CRM",
       tagline: "A lightweight CRM for freelancers and small agencies to manage clients, projects, tasks, and invoices.",
       logoUrl: null,
       faviconUrl: null,
@@ -54,7 +54,7 @@ describe("getPlatformBranding", () => {
 
     const branding = getPlatformBranding();
 
-    expect(branding.name).toBe("Aqenra");
+    expect(branding.name).toBe("VenSai CRM");
     expect(branding.logoUrl).toBeNull();
   });
 

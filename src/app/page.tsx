@@ -4,7 +4,13 @@ import { siteConfig } from "@/config/site";
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 text-center">
-      <div className="w-full max-w-lg">
+      <div className="flex w-full max-w-lg flex-col items-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/hctpl-logo.png"
+          alt="VenSai CRM Logo"
+          className="mb-4 h-16 w-auto object-contain"
+        />
         <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
           {siteConfig.name}
         </h1>

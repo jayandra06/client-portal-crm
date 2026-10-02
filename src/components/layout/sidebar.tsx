@@ -232,9 +232,17 @@ export function Sidebar({
       aria-label="Primary"
       className="border-border-default bg-surface-recessed flex shrink-0 gap-1 overflow-x-auto border-b p-3 md:w-56 md:flex-col md:gap-0.5 md:overflow-x-visible md:border-r md:border-b-0 md:p-4"
     >
-      <span className="text-text-primary hidden px-2 pb-4 text-lg font-semibold tracking-tight md:block">
-        {siteConfig.name}
-      </span>
+      <div className="hidden items-center gap-2.5 px-2 pb-4 md:flex">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/hctpl-logo.png"
+          alt="VenSai CRM Logo"
+          className="h-8 w-auto object-contain"
+        />
+        <span className="text-text-primary text-lg font-semibold tracking-tight">
+          {siteConfig.name}
+        </span>
+      </div>
       {groups.map((group) => {
         const groupActive = group.key === activeGroupKey;
         const Icon = group.icon;

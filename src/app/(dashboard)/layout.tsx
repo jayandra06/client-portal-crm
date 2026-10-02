@@ -11,7 +11,6 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { getCachedEffectivePermissionSet } from "@/lib/permissions/resolver";
 import { Header } from "@/components/layout/header";
 import { DemoBanner } from "@/components/layout/demo-banner";
-import { TEST_MODE } from "@/lib/test-mode";
 import { isAiAssistantAvailable } from "@/lib/ai/providers/provider-factory";
 import { ThemePreferenceReconciler } from "@/components/theme/theme-preference-reconciler";
 import { dbThemeModeToRuntimeMode } from "@/lib/theme/db-mode";
@@ -160,7 +159,6 @@ export default async function DashboardLayout({
         */}
         <ThemePreferenceReconciler mode={dbThemeModeToRuntimeMode(currentUser.themeMode)} />
         <Sidebar
-          disablePrefetch={TEST_MODE}
           permissions={{
             recurringInvoicesManage: effectivePermissions.RECURRING_INVOICES_MANAGE,
             analyticsView: effectivePermissions.ANALYTICS_VIEW,

@@ -24,7 +24,7 @@ export function Header({
   const activeOrganizationId = organizations.find((org) => org.isActive)?.organizationId;
 
   return (
-    <header className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b border-border-default bg-surface/90 px-6 py-3.5 backdrop-blur-md transition-shadow">
+    <header className="sticky top-0 z-30 flex min-h-16 flex-wrap items-center justify-between gap-3 border-b border-border-default bg-surface/85 px-4 py-3 shadow-sm backdrop-blur-xl transition-shadow sm:px-6">
       <OrganizationSwitcher organizations={organizations} action={switchOrganizationAction} />
       <div className="flex min-w-0 items-center gap-3 sm:gap-4">
         <GlobalSearch key={activeOrganizationId} />

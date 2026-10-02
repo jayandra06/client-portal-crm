@@ -176,7 +176,7 @@ export default async function DashboardLayout({
           once its ancestor chain has somewhere to shrink to. Same root
           cause class as header.tsx's own min-w-0 fix (see that file).
         */}
-        <div className="flex min-w-0 flex-1 flex-col md:pl-60">
+        <div className="flex min-w-0 flex-1 flex-col md:pl-64">
           <Header
             email={user.email ?? ""}
             organizations={organizations}
@@ -198,7 +198,7 @@ export default async function DashboardLayout({
             className continues to apply inside this wrapper exactly as
             before.
           */}
-          <main className="flex-1 p-6">
+          <main className="flex-1 bg-[radial-gradient(circle_at_top_right,color-mix(in_srgb,var(--accent)_8%,transparent),transparent_30rem)] p-4 sm:p-6">
             <div className="mx-auto max-w-7xl">{children}</div>
           </main>
         </div>

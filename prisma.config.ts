@@ -3,6 +3,26 @@
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
+function getDatasourceUrl(): string | undefined {
+  const raw =
+    process.env["DIRECT_URL"] ||
+    process.env["POSTGRES_URL_NON_POOLING"] ||
+    process.env["DATABASE_URL"] ||
+    process.env["POSTGRES_PRISMA_URL"] ||
+    process.env["POSTGRES_URL"];
+
+  if (!raw || raw.includes("localhost") || raw.includes("127.0.0.1")) {
+    return raw;
+  }
+  try {
+    const url = new URL(raw);
+    url.searchParams.set("sslmode", "no-verify");
+    return url.toString();
+  } catch {
+    return raw;
+  }
+}
+
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
@@ -15,11 +35,6 @@ export default defineConfig({
     // application runtime client in src/lib/prisma.ts.
     // Also falls back to POSTGRES_URL_NON_POOLING / POSTGRES_PRISMA_URL for
     // environments configured with Vercel's Supabase Integration.
-    url:
-      process.env["DIRECT_URL"] ||
-      process.env["POSTGRES_URL_NON_POOLING"] ||
-      process.env["DATABASE_URL"] ||
-      process.env["POSTGRES_PRISMA_URL"] ||
-      process.env["POSTGRES_URL"],
+    url: getDatasourceUrl(),
   },
 });

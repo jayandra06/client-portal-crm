@@ -16,17 +16,44 @@ const globalForPrisma = globalThis as unknown as {
 // pg.Pool queue those calls onto one connection instead of opening several;
 // behavior is identical, just serialized. Never applies against the real
 // DATABASE_URL (local dev or production), where this env var is never set.
-function createPrismaClient(): PrismaClient {
-  const connectionString =
+function getEffectiveConnectionString(): string | undefined {
+  const raw =
     process.env.DATABASE_URL ||
     process.env.POSTGRES_PRISMA_URL ||
     process.env.POSTGRES_URL;
 
-  // Supabase, Neon, and other cloud Postgres providers use certificate chains
-  // with custom/self-signed root or intermediate certificates. With Prisma 7
-  // and @prisma/adapter-pg, Node's TLS validator rejects these connections by
-  // default with "self-signed certificate in certificate chain" (P1011).
-  // Relaxing verification for remote hosts allows encrypted TLS without crashing.
+  if (!raw) {
+    return undefined;
+  }
+
+  // Preserve local dev / in-memory test databases (PGlite) unchanged
+  if (
+    process.env.PGLITE_TEST_DB ||
+    raw.includes("localhost") ||
+    raw.includes("127.0.0.1")
+  ) {
+    return raw;
+  }
+
+  // Remote PostgreSQL providers (Supabase, Neon, AWS RDS, etc.):
+  // pg-connection-string parses sslmode=require/prefer/verify-ca as verify-full,
+  // which causes Node's TLS layer to reject custom or self-signed intermediate
+  // certificates with P1011 (self-signed certificate in certificate chain).
+  // Overriding sslmode to no-verify directly in the connection URL instructs
+  // pg-connection-string to configure { rejectUnauthorized: false }, ensuring
+  // encrypted TLS succeeds without certificate rejection.
+  try {
+    const url = new URL(raw);
+    url.searchParams.set("sslmode", "no-verify");
+    return url.toString();
+  } catch {
+    return raw;
+  }
+}
+
+function createPrismaClient(): PrismaClient {
+  const connectionString = getEffectiveConnectionString();
+
   const isRemote =
     Boolean(connectionString) &&
     !process.env.PGLITE_TEST_DB &&
